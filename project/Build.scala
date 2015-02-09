@@ -37,6 +37,7 @@ object ProjectBuild extends Build {
     val formattingSettings = scalariformSettings ++ Seq(
         ScalariformKeys.preferences := ScalariformKeys.preferences.value
                 .setPreference(RewriteArrowSymbols, true)
+                .setPreference(IndentSpaces, 4)
                 .setPreference(AlignParameters, true)
                 .setPreference(AlignSingleLineCaseStatements, true)
                 .setPreference(DoubleIndentClassDeclaration, true)
