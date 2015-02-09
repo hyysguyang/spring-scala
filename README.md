@@ -1,3 +1,8 @@
+#Notice
+
+We will continue provide bug fix and enhancement for the latest spring framework support.
+
+
 # Spring Scala
 
 The goal of Spring Scala is to make it easier to use the Spring framework in Scala.
