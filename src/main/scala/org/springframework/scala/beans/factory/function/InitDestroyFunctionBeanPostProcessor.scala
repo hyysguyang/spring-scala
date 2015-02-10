@@ -87,12 +87,8 @@ class InitDestroyFunctionBeanPostProcessor
                             function: (Any) ⇒ Unit) {
 
         functionsMap.get(beanName) match {
-            case None ⇒
-                val list = new ListBuffer[Function1[Any, Unit]]
-                list += function
-                functionsMap(beanName) = list
-            case Some(list) ⇒
-                list += function
+            case None       ⇒ functionsMap(beanName) = ListBuffer(function)
+            case Some(list) ⇒ list += function
         }
     }
 
