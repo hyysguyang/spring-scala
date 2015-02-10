@@ -27,10 +27,10 @@ import org.springframework.beans.factory.config.BeanDefinition
  */
 trait FunctionalBeanDefinition[T] extends BeanDefinition {
 
-	/**
-	 * Returns the bean creation function.
-	 * @return the bean creation function
-	 */
-	def beanCreationFunction: () => T
+    /**
+     * Returns the bean creation function.
+     * @return the bean creation function
+     */
+    def beanCreationFunction: () ⇒ T
 }
 

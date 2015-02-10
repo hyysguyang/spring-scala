@@ -17,7 +17,7 @@
 package org.springframework.scala.beans.factory.config
 
 import org.springframework.beans.factory.config.AbstractFactoryBean
-import scala.collection.{mutable, Seq}
+import scala.collection.{ mutable, Seq }
 
 /**
  * Simple factory for shared [[scala.collection.Seq]] instances. Allows for central setup
@@ -29,19 +29,19 @@ import scala.collection.{mutable, Seq}
  * @param builderFunction function used to create a new sequence builder
  */
 class SeqFactoryBean[T](val sourceSeq: Seq[T],
-                        val builderFunction: () => mutable.Builder[T, Seq[T]])
-		extends AbstractFactoryBean[Seq[T]] {
+                        val builderFunction: () ⇒ mutable.Builder[T, Seq[T]])
+        extends AbstractFactoryBean[Seq[T]] {
 
-	def this(sourceSeq: Seq[T]) {
-		this(sourceSeq, Seq.newBuilder[T] _)
-	}
+    def this(sourceSeq: Seq[T]) {
+        this(sourceSeq, Seq.newBuilder[T] _)
+    }
 
-	override def getObjectType = classOf[Seq[T]]
+    override def getObjectType = classOf[Seq[T]]
 
-	override def createInstance(): Seq[T] = {
-		val builder = builderFunction()
-		// TODO: determine Seq element type by using GenericCollectionTypeResolver
-		builder ++= sourceSeq
-		builder.result()
-	}
+    override def createInstance(): Seq[T] = {
+        val builder = builderFunction()
+        // TODO: determine Seq element type by using GenericCollectionTypeResolver
+        builder ++= sourceSeq
+        builder.result()
+    }
 }

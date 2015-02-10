@@ -24,14 +24,13 @@ import org.springframework.beans.factory.support.RootBeanDefinition
  *
  * @author Arjen Poutsma
  */
-class FunctionalRootBeanDefinition[T](beanFunction: () => T, targetType: Class[T])
-		extends RootBeanDefinition with FunctionalBeanDefinition[T] {
+class FunctionalRootBeanDefinition[T](beanFunction: () ⇒ T, targetType: Class[T])
+        extends RootBeanDefinition with FunctionalBeanDefinition[T] {
 
-	setBeanClass(classOf[Function0Wrapper])
-	getConstructorArgumentValues.addIndexedArgumentValue(0, beanFunction)
-	setFactoryMethodName("apply")
-	setTargetType(targetType)
+    setBeanClass(classOf[Function0Wrapper])
+    getConstructorArgumentValues.addIndexedArgumentValue(0, beanFunction)
+    setFactoryMethodName("apply")
+    setTargetType(targetType)
 
-
-	def beanCreationFunction = beanFunction
+    def beanCreationFunction = beanFunction
 }

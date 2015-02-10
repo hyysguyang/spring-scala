@@ -45,8 +45,7 @@ object ProjectBuild extends Build {
 
 
     import net.virtualvoid.sbt.graph.Plugin._
-//
-    lazy val projectBuildSettings = basicSettings //++ formattingSettings ++ graphSettings
+    lazy val projectBuildSettings = basicSettings ++ formattingSettings ++ graphSettings
 
 
     lazy val root = Project("spring-scala", file("."))

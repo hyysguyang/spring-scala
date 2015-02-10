@@ -27,9 +27,9 @@ import org.springframework.beans.factory.config.AbstractFactoryBean
  * @tparam T the return type of the function
  */
 class Function0FactoryBean[T](function: Function0[T], objectType: Class[T])
-		extends AbstractFactoryBean[T] {
+        extends AbstractFactoryBean[T] {
 
-	def getObjectType = objectType
+    def getObjectType = objectType
 
-	def createInstance() = function()
+    def createInstance() = function()
 }
