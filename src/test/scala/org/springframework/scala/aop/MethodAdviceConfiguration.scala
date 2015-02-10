@@ -15,23 +15,23 @@ class MethodAdviceConfiguration extends FunctionalConfiguration {
   }
 
   bean("intercepted") {
-    val factory = new ProxyFactory(classOf[Object])
+    val factory = new ProxyFactory(new Object)
     factory.addAdvice(interceptor())
     factory.getProxy
   }
 
   bean("advicedBefore") {
-    val factory = new ProxyFactory(classOf[Object])
+    val factory = new ProxyFactory(new Object)
     factory.addAdvice((method: Method, args: Array[AnyRef], target: Any) => throw new BeforeAdviceException)
     factory.getProxy
-  }
+  };
 
   val afterReturningAdvice = bean[AfterReturningAdvice]("afterReturningAdvice") {
     (returned: Any, method: Method, args: Array[AnyRef], target: Any) => throw new AfterAdviceException
   }
 
   bean("advicedAfter") {
-    val factory = new ProxyFactory(classOf[Object])
+    val factory = new ProxyFactory(new Object)
     factory.addAdvice(afterReturningAdvice())
     factory.getProxy
   }

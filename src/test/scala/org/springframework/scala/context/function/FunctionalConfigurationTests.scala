@@ -45,7 +45,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 	    }
 		}
 		config.register(applicationContext, beanNameGenerator)
-
+applicationContext.refresh()
 		val foo = config.getBean[String]("foo")
 		assert("Foo" === foo)
 	}
@@ -58,7 +58,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val foo = applicationContext.getBean("foo", classOf[String])
 		val bar = applicationContext.getBean("bar", classOf[String])
 
@@ -77,7 +77,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 		}
 
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val beanFromConfig: Person = config.foo()
 		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
 		assert(beanFromConfig eq beanFromBeanFactory)
@@ -96,7 +96,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 		}
 
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val beanFromConfig1 = config.foo()
 		val beanFromConfig2 = config.foo()
 		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
@@ -117,7 +117,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val beanFromConfig1 = config.foo()
 		val beanFromConfig2 = config.foo()
 		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
@@ -138,7 +138,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 		}
 
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val beanFromConfig1 = config.foo()
 		val beanFromConfig2 = config.foo()
 		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
@@ -166,7 +166,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val john = config.john()
 		assert(john.father eq config.jack())
 		assert(john.mother eq config.jane())
@@ -191,7 +191,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val john = config.john()
 		assert("John" == john.firstName)
 		assert("Doe" == john.lastName)
@@ -218,7 +218,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 		}
 		val config = new Config
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		val john = config.john()
 		assert("John" == john.firstName)
 		assert("Doe" == john.lastName)
@@ -246,6 +246,43 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 		assert(!foo.initialised)
 	}
 
+    test("init and destroy with multiple configuration") {
+        val applicationContext = new GenericApplicationContext()
+
+        val config = new FunctionalConfiguration {
+
+            val foo = bean("foo") {
+                new InitializablePerson("John", "Doe")
+            } init {
+                _.initialize()
+            } destroy {
+                _.destroy()
+            }
+        }
+
+        val config2 = new FunctionalConfiguration {
+
+            val foo = bean("foo2") {
+                new InitializablePerson("John2", "Doe2")
+            } init {
+                _.initialize()
+            } destroy {
+                _.destroy()
+            }
+        }
+
+        config.register(applicationContext, beanNameGenerator)
+        config2.register(applicationContext, beanNameGenerator)
+        applicationContext.refresh()
+
+        val foo = applicationContext.getBean("foo", classOf[InitializablePerson])
+        val foo2 = applicationContext.getBean("foo2", classOf[InitializablePerson])
+        assert(foo.initialised)
+        assert(foo2.initialised)
+        applicationContext.close()
+        assert(!foo2.initialised)
+    }
+
 	test("profile") {
 		applicationContext.getEnvironment.addActiveProfile("profile1")
 
@@ -264,7 +301,7 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-
+        applicationContext.refresh()
 		assert(applicationContext.containsBean("foo"))
 		assert(!applicationContext.containsBean("bar"))
 		assert("Foo" == applicationContext.getBean("foo"))
@@ -281,6 +318,8 @@ class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
+        applicationContext.refresh()
+
 		assert("John" == config.john().firstName)
 		assert("Doe" == config.john().lastName)
 	}

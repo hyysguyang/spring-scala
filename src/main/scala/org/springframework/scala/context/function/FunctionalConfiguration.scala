@@ -63,6 +63,8 @@ trait FunctionalConfiguration extends DelayedInit {
 	private final val INIT_DESTROY_FUNCTION_PROCESSOR_BEAN_NAME =
 		"org.springframework.scala.beans.factory.function.internalInitDestroyFunctionProcessor"
 
+    private val initDestroyBeanPostProcessorName=s"$INIT_DESTROY_FUNCTION_PROCESSOR_BEAN_NAME@${getClass.getName}@${System.identityHashCode(this)}"
+
 	private val initCode = new ListBuffer[() => Unit]
 
 	private val registrationCode =
@@ -72,12 +74,8 @@ trait FunctionalConfiguration extends DelayedInit {
 
 	private var beanNameGenerator: BeanNameGenerator = _
 
-	private def initDestroyProcessor: InitDestroyFunctionBeanPostProcessor = {
-		assert(beanFactory.containsBean(INIT_DESTROY_FUNCTION_PROCESSOR_BEAN_NAME),
-		       "Could not find InitDestroyFunctionBeanPostProcessor in application context")
-		beanFactory.getBean(INIT_DESTROY_FUNCTION_PROCESSOR_BEAN_NAME,
-		                    classOf[InitDestroyFunctionBeanPostProcessor])
-	}
+
+    lazy val initDestroyProcessor =new InitDestroyFunctionBeanPostProcessor
 
 	/**
 	 * Returns the bean factory associated with this functional configuration.
@@ -141,7 +139,7 @@ trait FunctionalConfiguration extends DelayedInit {
 	}
 
 	private[springframework] def registerBean[T](name: String,
-																							 beanType: Class[T],
+                                                 beanType: Class[T],
 	                                             aliases: Seq[String],
 	                                             scope: String,
 	                                             lazyInit: Boolean,
@@ -324,13 +322,7 @@ trait FunctionalConfiguration extends DelayedInit {
 	}
 
 	private def registerInitDestroyProcessor() {
-		if (!beanRegistry.containsBeanDefinition(INIT_DESTROY_FUNCTION_PROCESSOR_BEAN_NAME)) {
-			val definition = new
-							RootBeanDefinition(classOf[InitDestroyFunctionBeanPostProcessor])
-			definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE)
-			beanRegistry
-					.registerBeanDefinition(INIT_DESTROY_FUNCTION_PROCESSOR_BEAN_NAME, definition)
-		}
+        bean(initDestroyBeanPostProcessorName) (initDestroyProcessor)
 	}
 
 	final override def delayedInit(body: => Unit) {

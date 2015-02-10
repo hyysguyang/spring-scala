@@ -49,10 +49,10 @@ class ApplicationListenerAdapterTest extends FunSuite with GivenWhenThen with Be
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-		val aggregator = applicationContext.getBean(classOf[AggregatingAllBean])
+        applicationContext.refresh()
+        val aggregator = applicationContext.getBean(classOf[AggregatingAllBean])
 
-		When("context started and destroyed")
-		applicationContext.refresh()
+        When("context started and destroyed")
 		applicationContext.destroy()
 
 		Then("two events captured")
@@ -68,10 +68,10 @@ class ApplicationListenerAdapterTest extends FunSuite with GivenWhenThen with Be
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-		val aggregator = applicationContext.getBean(classOf[AggregatingDestroyBean])
+        applicationContext.refresh()
+        val aggregator = applicationContext.getBean(classOf[AggregatingDestroyBean])
 
-		When("context started and destroyed")
-		applicationContext.refresh()
+        When("context started and destroyed")
 		applicationContext.destroy()
 
 		Then("destroy event captured")
@@ -87,8 +87,8 @@ class ApplicationListenerAdapterTest extends FunSuite with GivenWhenThen with Be
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-		val aggregator = applicationContext.getBean(classOf[AggregatingCustomEventsBean])
-		applicationContext.refresh()
+        applicationContext.refresh()
+        val aggregator = applicationContext.getBean(classOf[AggregatingCustomEventsBean])
 
 		When("custom events sent")
 		applicationContext.publishEvent(CustomEvent(42, enabled = true, this))
@@ -107,10 +107,10 @@ class ApplicationListenerAdapterTest extends FunSuite with GivenWhenThen with Be
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-		val aggregator = applicationContext.getBean(classOf[AggregatingAllBean])
+        applicationContext.refresh()
+        val aggregator = applicationContext.getBean(classOf[AggregatingAllBean])
 
-		When("context started and destroyed + custom event")
-		applicationContext.refresh()
+        When("context started and destroyed + custom event")
 		applicationContext.publishEvent(CustomEvent(42, enabled = false, this))
 		applicationContext.destroy()
 
@@ -127,8 +127,8 @@ class ApplicationListenerAdapterTest extends FunSuite with GivenWhenThen with Be
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-		val aggregator = applicationContext.getBean(classOf[AdvancedAggregatingCustomEventsBean])
-		applicationContext.refresh()
+        applicationContext.refresh()
+        val aggregator = applicationContext.getBean(classOf[AdvancedAggregatingCustomEventsBean])
 
 		When("custom events sent")
 		applicationContext.publishEvent(CustomEvent(42, enabled = false, this))
@@ -151,11 +151,11 @@ class ApplicationListenerAdapterTest extends FunSuite with GivenWhenThen with Be
 			}
 		}
 		config.register(applicationContext, beanNameGenerator)
-		val allAggregator = applicationContext.getBean(classOf[AggregatingAllBean])
-		val customAggregator = applicationContext.getBean(classOf[AggregatingCustomEventsBean])
+        applicationContext.refresh()
+        val allAggregator = applicationContext.getBean(classOf[AggregatingAllBean])
+        val customAggregator = applicationContext.getBean(classOf[AggregatingCustomEventsBean])
 
-		When("context started and destroyed")
-		applicationContext.refresh()
+        When("context started and destroyed")
 		applicationContext.publishEvent(CustomEvent(47, enabled = true, this))
 		applicationContext.destroy()
 

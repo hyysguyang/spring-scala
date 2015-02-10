@@ -54,7 +54,7 @@ object ProjectBuild extends Build {
             .settings(libraryDependencies ++= dependencies)
 
 
-    val springVersion="3.2.4.RELEASE";
+    val springVersion="4.1.4.RELEASE"
     val dependencies=Seq(
         "org.springframework" % "spring-aop" % springVersion % "provided",
         "org.springframework" % "spring-core" % springVersion % "compile",
@@ -64,7 +64,6 @@ object ProjectBuild extends Build {
         "org.springframework" % "spring-jms" % springVersion % "provided",
         "org.springframework" % "spring-web" % springVersion % "provided",
         "org.springframework" % "spring-test" % springVersion % "provided",
-
 
         "org.scala-lang" % "scala-reflect" % "2.11.4" % "compile",
         "org.scala-lang.modules" %% "scala-xml" % "1.0.2" % "compile",

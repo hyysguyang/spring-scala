@@ -29,6 +29,7 @@ class FunctionalConfigApplicationContextTests extends FunSuite {
 	test("registerClass") {
 		val appContext = new FunctionalConfigApplicationContext()
 		appContext.registerClass[MyFunctionalConfiguration]
+        appContext.refresh()
 		val foo = appContext.getBean("foo")
 		assert("Foo" == foo)
 	}
@@ -36,6 +37,7 @@ class FunctionalConfigApplicationContextTests extends FunSuite {
 	test("registerClasses") {
 		val appContext = new FunctionalConfigApplicationContext()
 		appContext.registerClasses(classOf[MyFunctionalConfiguration])
+        appContext.refresh()
 		val foo = appContext.getBean("foo")
 		assert("Foo" == foo)
 	}
@@ -43,6 +45,7 @@ class FunctionalConfigApplicationContextTests extends FunSuite {
 	test("registerConfigurations") {
 		val appContext = new FunctionalConfigApplicationContext()
 		appContext.registerConfigurations(new MyFunctionalConfiguration)
+        appContext.refresh()
 		val foo = appContext.getBean("foo")
 		assert("Foo" == foo)
 	}
