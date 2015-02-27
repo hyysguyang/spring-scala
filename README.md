@@ -13,14 +13,14 @@ sbt ";publishLocal;publishM2"
 
 ##SBT
 
-`libraryDependencies += "org.springframework.scala" %% "spring-scala" % "1.0.0.RC1"`
+`libraryDependencies += "org.springframework.scala" %% "spring-scala" % "1.0.0-SNAPSHOT"`
 
 ##Maven
 ```
 <dependency>
     <groupId>org.springframework.scala</groupId>
     <artifactId>spring-scala_2.11</artifactId>
-    <version>1.0.0.RC1</version>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
