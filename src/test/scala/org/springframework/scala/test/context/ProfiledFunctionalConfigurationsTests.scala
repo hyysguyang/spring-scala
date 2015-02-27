@@ -16,7 +16,7 @@
 
 package org.springframework.scala.test.context
 
-import org.springframework.test.context.{ActiveProfiles, ContextConfiguration}
+import org.springframework.test.context.{ ActiveProfiles, ContextConfiguration }
 import org.junit.Test
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.junit.runner.RunWith

@@ -41,59 +41,59 @@ import scala.reflect.ClassTag
  * @see FunctionalConfiguration
  */
 class FunctionalConfigApplicationContext
-        extends GenericApplicationContext with RichApplicationContext {
+    extends GenericApplicationContext with RichApplicationContext {
 
-    var beanNameGenerator: BeanNameGenerator = new DefaultBeanNameGenerator
+  var beanNameGenerator: BeanNameGenerator = new DefaultBeanNameGenerator
 
-    private val richApplicationContext: RichApplicationContext = this
+  private val richApplicationContext: RichApplicationContext = this
 
-    /**
-     * Registers a single [[org.springframework.scala.context.function.FunctionalConfiguration]]
-     * classes to be processed. Note that ``refresh()`` must be called in order for
-     * the context to fully process the given configurations.
-     * @tparam T the configuration class
-     */
-    def registerClass[T <: FunctionalConfiguration: ClassTag]() {
-        registerClasses(typeToClass[T])
-    }
+  /**
+   * Registers a single [[org.springframework.scala.context.function.FunctionalConfiguration]]
+   * classes to be processed. Note that ``refresh()`` must be called in order for
+   * the context to fully process the given configurations.
+   * @tparam T the configuration class
+   */
+  def registerClass[T <: FunctionalConfiguration: ClassTag]() {
+    registerClasses(typeToClass[T])
+  }
 
-    /**
-     * Registers one or more [[org.springframework.scala.context.function.FunctionalConfiguration]]
-     * classes to be processed. Note that ``refresh()`` must be called in order for
-     * the context to fully process the given configurations.
-     * @param configurationClasses one or more functional configuration classes
-     */
-    def registerClasses(configurationClasses: Class[_ <: FunctionalConfiguration]*) {
-        require(!CollectionUtils.isEmpty(configurationClasses),
-            "At least one functional configuration class must be specified")
-        val configurations = configurationClasses.map(BeanUtils.instantiate(_))
-        registerConfigurations(configurations: _*)
-    }
+  /**
+   * Registers one or more [[org.springframework.scala.context.function.FunctionalConfiguration]]
+   * classes to be processed. Note that ``refresh()`` must be called in order for
+   * the context to fully process the given configurations.
+   * @param configurationClasses one or more functional configuration classes
+   */
+  def registerClasses(configurationClasses: Class[_ <: FunctionalConfiguration]*) {
+    require(!CollectionUtils.isEmpty(configurationClasses),
+      "At least one functional configuration class must be specified")
+    val configurations = configurationClasses.map(BeanUtils.instantiate(_))
+    registerConfigurations(configurations: _*)
+  }
 
-    /**
-     * Registers one or more [[org.springframework.scala.context.function.FunctionalConfiguration]]s
-     * to be processed. Note that ``refresh()`` must be called in order for
-     * the context to fully process the given configurations.
-     * @param configurations one or more functional configurations
-     */
-    def registerConfigurations(configurations: FunctionalConfiguration*) {
-        require(!CollectionUtils.isEmpty(configurations),
-            "At least one configuration must be specified")
-        configurations.foreach(_.register(this, beanNameGenerator))
-    }
+  /**
+   * Registers one or more [[org.springframework.scala.context.function.FunctionalConfiguration]]s
+   * to be processed. Note that ``refresh()`` must be called in order for
+   * the context to fully process the given configurations.
+   * @param configurations one or more functional configurations
+   */
+  def registerConfigurations(configurations: FunctionalConfiguration*) {
+    require(!CollectionUtils.isEmpty(configurations),
+      "At least one configuration must be specified")
+    configurations.foreach(_.register(this, beanNameGenerator))
+  }
 
-    def apply[T: ClassTag]() = {
-        getBean(typeToClass[T])
-    }
+  def apply[T: ClassTag]() = {
+    getBean(typeToClass[T])
+  }
 
-    def apply[T: ClassTag](name: String) =
-        getBean(name, typeToClass[T])
+  def apply[T: ClassTag](name: String) =
+    getBean(name, typeToClass[T])
 
-    def beanNamesForType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
-        getBeanNamesForType(typeToClass[T], includeNonSingletons, allowEagerInit)
+  def beanNamesForType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
+    getBeanNamesForType(typeToClass[T], includeNonSingletons, allowEagerInit)
 
-    def beansOfType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
-        getBeansOfType(typeToClass[T], includeNonSingletons, allowEagerInit).toMap
+  def beansOfType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
+    getBeansOfType(typeToClass[T], includeNonSingletons, allowEagerInit).toMap
 }
 
 /**
@@ -103,29 +103,29 @@ class FunctionalConfigApplicationContext
  */
 object FunctionalConfigApplicationContext {
 
-    /**
-     * Creates a new ``FunctionalConfigApplicationContext``, deriving bean
-     * definitions from the given configuration type parameter and automatically
-     * refreshing the context.
-     * @tparam T the configuration class
-     */
-    def apply[T <: FunctionalConfiguration: ClassTag](): FunctionalConfigApplicationContext = {
-        val context = new FunctionalConfigApplicationContext()
-        context.registerClass[T]()
-        context.refresh()
-        context
-    }
+  /**
+   * Creates a new ``FunctionalConfigApplicationContext``, deriving bean
+   * definitions from the given configuration type parameter and automatically
+   * refreshing the context.
+   * @tparam T the configuration class
+   */
+  def apply[T <: FunctionalConfiguration: ClassTag](): FunctionalConfigApplicationContext = {
+    val context = new FunctionalConfigApplicationContext()
+    context.registerClass[T]()
+    context.refresh()
+    context
+  }
 
-    /**
-     * Creates a new ``FunctionalConfigApplicationContext``, deriving bean
-     * definitions from the given configuration classes and automatically
-     * refreshing the context.
-     * @param configurationClasses one or more functional configuration classes
-     */
-    def apply(configurationClasses: Class[_ <: FunctionalConfiguration]*): FunctionalConfigApplicationContext = {
-        val context = new FunctionalConfigApplicationContext()
-        context.registerClasses(configurationClasses: _*)
-        context.refresh()
-        context
-    }
+  /**
+   * Creates a new ``FunctionalConfigApplicationContext``, deriving bean
+   * definitions from the given configuration classes and automatically
+   * refreshing the context.
+   * @param configurationClasses one or more functional configuration classes
+   */
+  def apply(configurationClasses: Class[_ <: FunctionalConfiguration]*): FunctionalConfigApplicationContext = {
+    val context = new FunctionalConfigApplicationContext()
+    context.registerClasses(configurationClasses: _*)
+    context.refresh()
+    context
+  }
 }

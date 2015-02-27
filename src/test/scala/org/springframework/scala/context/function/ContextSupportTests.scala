@@ -20,44 +20,44 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.beans.factory.support.DefaultBeanNameGenerator
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.{ BeforeAndAfterEach, FunSuite }
 import org.springframework.beans.factory.annotation.Autowired
 
 @RunWith(classOf[JUnitRunner])
 class ContextSupportTests extends FunSuite with BeforeAndAfterEach {
 
-	var applicationContext: GenericApplicationContext = _
+  var applicationContext: GenericApplicationContext = _
 
-	val beanNameGenerator = new DefaultBeanNameGenerator()
+  val beanNameGenerator = new DefaultBeanNameGenerator()
 
-	override protected def beforeEach() {
-		applicationContext = new GenericApplicationContext()
-	}
+  override protected def beforeEach() {
+    applicationContext = new GenericApplicationContext()
+  }
 
-	test("enableAnnotationConfig()") {
-		val config = new FunctionalConfiguration with ContextSupport {
+  test("enableAnnotationConfig()") {
+    val config = new FunctionalConfiguration with ContextSupport {
 
-			enableAnnotationConfig()
+      enableAnnotationConfig()
 
-			bean("a") { new A }
+      bean("a") { new A }
 
-			bean("b") { new B }
+      bean("b") { new B }
 
-		}
+    }
 
-		config.register(applicationContext, beanNameGenerator)
+    config.register(applicationContext, beanNameGenerator)
 
-		applicationContext.refresh()
+    applicationContext.refresh()
 
-		val b = applicationContext.getBean("b", classOf[B])
-		assert(b.a != null)
-	}
+    val b = applicationContext.getBean("b", classOf[B])
+    assert(b.a != null)
+  }
 
 }
 
 class A
 
 class B {
-	@Autowired
-	var a: A = _
+  @Autowired
+  var a: A = _
 }

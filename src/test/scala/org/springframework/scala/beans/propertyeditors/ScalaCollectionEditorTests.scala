@@ -23,19 +23,18 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ScalaCollectionEditorTests extends FunSuite {
 
-	test("null as empty collection") {
-		val editor = new ScalaCollectionEditor(Seq.newBuilder[String] _, true)
-		editor.setValue(null)
-		val result = editor.getValue.asInstanceOf[Seq[String]]
-		assert(result.isEmpty)
-	}
+  test("null as empty collection") {
+    val editor = new ScalaCollectionEditor(Seq.newBuilder[String] _, true)
+    editor.setValue(null)
+    val result = editor.getValue.asInstanceOf[Seq[String]]
+    assert(result.isEmpty)
+  }
 
-	test("null not as empty collection") {
-		val editor = new ScalaCollectionEditor(Seq.newBuilder[String] _, false)
-		editor.setValue(null)
-		val result = editor.getValue
-		assert(result == null)
-	}
-
+  test("null not as empty collection") {
+    val editor = new ScalaCollectionEditor(Seq.newBuilder[String] _, false)
+    editor.setValue(null)
+    val result = editor.getValue
+    assert(result == null)
+  }
 
 }

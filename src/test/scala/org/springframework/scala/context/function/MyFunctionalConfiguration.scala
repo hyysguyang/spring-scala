@@ -18,8 +18,8 @@ package org.springframework.scala.context.function
 
 class MyFunctionalConfiguration extends FunctionalConfiguration {
 
-	bean("foo") {
-		"Foo"
-	}
+  bean("foo") {
+    "Foo"
+  }
 
 }

@@ -29,31 +29,31 @@ import scala.reflect.ClassTag
  */
 object ApplicationContextConversions {
 
-    /**
-     * Implicitly converts a [[org.springframework.context.ApplicationContext]] to a
-     * [[org.springframework.scala.context.RichApplicationContext]].
-     *
-     * @param appContext the application context to be converted
-     * @return the rich application context
-     */
-    implicit def toRichApplicationContext(appContext: ApplicationContext): RichApplicationContext =
-        new DefaultRichApplicationContext(appContext)
+  /**
+   * Implicitly converts a [[org.springframework.context.ApplicationContext]] to a
+   * [[org.springframework.scala.context.RichApplicationContext]].
+   *
+   * @param appContext the application context to be converted
+   * @return the rich application context
+   */
+  implicit def toRichApplicationContext(appContext: ApplicationContext): RichApplicationContext =
+    new DefaultRichApplicationContext(appContext)
 
 }
 
 private[springframework] class DefaultRichApplicationContext(val appContext: ApplicationContext)
-        extends RichApplicationContext {
+    extends RichApplicationContext {
 
-    private val beanFactory: RichListableBeanFactory = appContext
+  private val beanFactory: RichListableBeanFactory = appContext
 
-    def apply[T: ClassTag]() = beanFactory.apply[T]()
+  def apply[T: ClassTag]() = beanFactory.apply[T]()
 
-    def apply[T: ClassTag](name: String) = beanFactory.apply[T](name)
+  def apply[T: ClassTag](name: String) = beanFactory.apply[T](name)
 
-    def beanNamesForType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
-        beanFactory.beanNamesForType[T](includeNonSingletons, allowEagerInit)
+  def beanNamesForType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
+    beanFactory.beanNamesForType[T](includeNonSingletons, allowEagerInit)
 
-    def beansOfType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
-        beanFactory.beansOfType[T](includeNonSingletons, allowEagerInit)
+  def beansOfType[T: ClassTag](includeNonSingletons: Boolean, allowEagerInit: Boolean) =
+    beanFactory.beansOfType[T](includeNonSingletons, allowEagerInit)
 
 }

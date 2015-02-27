@@ -7,15 +7,14 @@ import sbt._
  */
 object ProjectBuild extends Build {
 
-    val VERSION = "0.0.1-SNAPSHOT"
-    val lifecycle=addCommandAlias("install", ";test;it:test;publishLocal") ++ addCommandAlias("testing", ";test;it:test")
+    val VERSION = "1.0.0-SNAPSHOT"
 
-    val basicSettings = Defaults.coreDefaultSettings ++ lifecycle ++ Seq(
+    val basicSettings = Defaults.coreDefaultSettings ++ Seq(
         version := VERSION,
-        homepage := Some(new URL("https://lifecosys.com/developer/lifecosys-customer-assistant")),
-        organization := "com.lifecosys",
-        organizationHomepage := Some(new URL("https://lifecosys.com")),
-        description := "Lifecosys customer assistant.",
+        homepage := Some(new URL("https://github.com/hyysguyang/spring-scala")),
+        organization := "org.springframework.scala",
+        organizationHomepage := Some(new URL("https://github.com/hyysguyang/spring-scala")),
+        description := "Scala support for Spring framework",
         startYear := Some(2015),
         scalaVersion := "2.11.4",
         scalacOptions := Seq(
@@ -23,7 +22,7 @@ object ProjectBuild extends Build {
             "-feature",
             "-unchecked",
             "-deprecation",
-            "-target:jvm-1.6",
+            "-target:jvm-1.7",
             "-language:postfixOps",
             "-language:implicitConversions",
             "-Xlog-reflective-calls"
@@ -37,7 +36,6 @@ object ProjectBuild extends Build {
     val formattingSettings = scalariformSettings ++ Seq(
         ScalariformKeys.preferences := ScalariformKeys.preferences.value
                 .setPreference(RewriteArrowSymbols, true)
-                .setPreference(IndentSpaces, 4)
                 .setPreference(AlignParameters, true)
                 .setPreference(AlignSingleLineCaseStatements, true)
                 .setPreference(DoubleIndentClassDeclaration, true)

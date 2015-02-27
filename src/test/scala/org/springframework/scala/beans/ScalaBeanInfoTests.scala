@@ -26,22 +26,21 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ScalaBeanInfoTests extends FunSuite {
 
-	test("propertyDescriptors") {
-		val beanInfo = new ScalaBeanInfo(classOf[ScalaBean])
+  test("propertyDescriptors") {
+    val beanInfo = new ScalaBeanInfo(classOf[ScalaBean])
 
-		val propertyDescriptors = beanInfo.getPropertyDescriptors
+    val propertyDescriptors = beanInfo.getPropertyDescriptors
 
-		assert(4 === propertyDescriptors.length)
+    assert(4 === propertyDescriptors.length)
 
-		assert("beanProperty" === propertyDescriptors(0).getName)
-		assert("getBeanProperty" === propertyDescriptors(0).getReadMethod.getName)
-		assert("setBeanProperty" === propertyDescriptors(0).getWriteMethod.getName)
-
+    assert("beanProperty" === propertyDescriptors(0).getName)
+    assert("getBeanProperty" === propertyDescriptors(0).getReadMethod.getName)
+    assert("setBeanProperty" === propertyDescriptors(0).getWriteMethod.getName)
 
     assert("class" === propertyDescriptors(1).getName)
 
     assert("readOnly" === propertyDescriptors(2).getName)
-		assert("readOnly" === propertyDescriptors(2).getReadMethod.getName)
+    assert("readOnly" === propertyDescriptors(2).getReadMethod.getName)
     assert(null == propertyDescriptors(2).getWriteMethod)
 
     assert("readWrite" === propertyDescriptors(3).getName)

@@ -28,28 +28,28 @@ class ConstructorAutowiredAnnotationBeanPostProcessorTests extends FunSuite {
 
   val processor = new ConstructorAutowiredAnnotationBeanPostProcessor
 
-	test("none") {
-		val result = processor.determineCandidateConstructors(classOf[NoAutowiredWithConstructor], "name")
-		assert(result === null)
+  test("none") {
+    val result = processor.determineCandidateConstructors(classOf[NoAutowiredWithConstructor], "name")
+    assert(result === null)
   }
 
-	test("autowired") {
-		val result = processor.determineCandidateConstructors(classOf[AutowiredWithConstructor], "name")
-		assert(result.size === 1)
-		assert(result(0).getParameterTypes()(0) === classOf[String])
-	}
+  test("autowired") {
+    val result = processor.determineCandidateConstructors(classOf[AutowiredWithConstructor], "name")
+    assert(result.size === 1)
+    assert(result(0).getParameterTypes()(0) === classOf[String])
+  }
 
-	test("inject") {
-		val result = processor.determineCandidateConstructors(classOf[InjectWithConstructor], "name")
-		assert(result.size === 1)
-		assert(result(0).getParameterTypes()(0) === classOf[String])
-	}
+  test("inject") {
+    val result = processor.determineCandidateConstructors(classOf[InjectWithConstructor], "name")
+    assert(result.size === 1)
+    assert(result(0).getParameterTypes()(0) === classOf[String])
+  }
 
-	test("two constructors") {
-		val result = processor
-				.determineCandidateConstructors(classOf[AutowiredWithTwoConstructors], "name")
-		assert(result === null)
-	}
+  test("two constructors") {
+    val result = processor
+      .determineCandidateConstructors(classOf[AutowiredWithTwoConstructors], "name")
+    assert(result === null)
+  }
 }
 
 class NoAutowiredWithConstructor(name: String) {}
@@ -62,8 +62,8 @@ class InjectWithConstructor(name: String) {}
 
 @Autowired
 class AutowiredWithTwoConstructors(name: String) {
-	def this(name: String, age: Int) {
-		this(name)
-	}
+  def this(name: String, age: Int) {
+    this(name)
+  }
 }
 

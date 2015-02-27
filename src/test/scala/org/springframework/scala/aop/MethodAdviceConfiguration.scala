@@ -6,12 +6,12 @@ import org.springframework.aop.framework.ProxyFactory
 import AdviceConversions._
 import java.lang.reflect.Method
 import org.springframework.aop.AfterReturningAdvice
-import org.aopalliance.intercept.{MethodInvocation, MethodInterceptor}
+import org.aopalliance.intercept.{ MethodInvocation, MethodInterceptor }
 
 class MethodAdviceConfiguration extends FunctionalConfiguration {
 
   val interceptor = bean[MethodInterceptor]("interceptor") {
-    (methodInvocation: MethodInvocation) => "intercepted"
+    (methodInvocation: MethodInvocation) ⇒ "intercepted"
   }
 
   bean("intercepted") {
@@ -22,12 +22,12 @@ class MethodAdviceConfiguration extends FunctionalConfiguration {
 
   bean("advicedBefore") {
     val factory = new ProxyFactory(new Object)
-    factory.addAdvice((method: Method, args: Array[AnyRef], target: Any) => throw new BeforeAdviceException)
+    factory.addAdvice((method: Method, args: Array[AnyRef], target: Any) ⇒ throw new BeforeAdviceException)
     factory.getProxy
   };
 
   val afterReturningAdvice = bean[AfterReturningAdvice]("afterReturningAdvice") {
-    (returned: Any, method: Method, args: Array[AnyRef], target: Any) => throw new AfterAdviceException
+    (returned: Any, method: Method, args: Array[AnyRef], target: Any) ⇒ throw new AfterAdviceException
   }
 
   bean("advicedAfter") {

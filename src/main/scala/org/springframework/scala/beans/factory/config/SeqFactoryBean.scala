@@ -30,18 +30,18 @@ import scala.collection.{ mutable, Seq }
  */
 class SeqFactoryBean[T](val sourceSeq: Seq[T],
                         val builderFunction: () ⇒ mutable.Builder[T, Seq[T]])
-        extends AbstractFactoryBean[Seq[T]] {
+    extends AbstractFactoryBean[Seq[T]] {
 
-    def this(sourceSeq: Seq[T]) {
-        this(sourceSeq, Seq.newBuilder[T] _)
-    }
+  def this(sourceSeq: Seq[T]) {
+    this(sourceSeq, Seq.newBuilder[T] _)
+  }
 
-    override def getObjectType = classOf[Seq[T]]
+  override def getObjectType = classOf[Seq[T]]
 
-    override def createInstance(): Seq[T] = {
-        val builder = builderFunction()
-        // TODO: determine Seq element type by using GenericCollectionTypeResolver
-        builder ++= sourceSeq
-        builder.result()
-    }
+  override def createInstance(): Seq[T] = {
+    val builder = builderFunction()
+    // TODO: determine Seq element type by using GenericCollectionTypeResolver
+    builder ++= sourceSeq
+    builder.result()
+  }
 }

@@ -29,23 +29,23 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ScalaBeanInfoFactoryTests extends FunSuite {
 
-	test("registration") {
-		val beanFactory = new DefaultListableBeanFactory
+  test("registration") {
+    val beanFactory = new DefaultListableBeanFactory
     val reader = new XmlBeanDefinitionReader(beanFactory)
 
-		reader.loadBeanDefinitions(new ClassPathResource(
-			"scalaBeanInfoFactoryIntegrationTest.xml", getClass))
+    reader.loadBeanDefinitions(new ClassPathResource(
+      "scalaBeanInfoFactoryIntegrationTest.xml", getClass))
 
-		val bean = beanFactory.getBean("scalaBean", classOf[ScalaBean])
+    val bean = beanFactory.getBean("scalaBean", classOf[ScalaBean])
 
-	  assert("Bar" === bean.readWrite)
-		assert("Bar" === bean.getBeanProperty)
+    assert("Bar" === bean.readWrite)
+    assert("Bar" === bean.getBeanProperty)
   }
 
-	test("supports") {
-		val factory = new ScalaBeanInfoFactory
-		assert(null != factory.getBeanInfo(classOf[ScalaBean]))
-		assert(null == factory.getBeanInfo(classOf[Object]))
- }
+  test("supports") {
+    val factory = new ScalaBeanInfoFactory
+    assert(null != factory.getBeanInfo(classOf[ScalaBean]))
+    assert(null == factory.getBeanInfo(classOf[Object]))
+  }
 
 }

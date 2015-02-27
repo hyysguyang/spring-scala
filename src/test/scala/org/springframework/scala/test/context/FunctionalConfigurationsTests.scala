@@ -30,10 +30,10 @@ import java.util.Date
 class FunctionalConfigurationsTests {
 
   @Autowired
-  var stringBean : String = _
+  var stringBean: String = _
 
   @Autowired
-  var dateBean : Date = _
+  var dateBean: Date = _
 
   @Test
   def shouldInjectStringBean() {

@@ -28,36 +28,36 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class RichBeanFactoryTests extends FunSuite {
 
-	val beanFactory = new StaticListableBeanFactory()
-	beanFactory.addBean("foo", "Bar")
+  val beanFactory = new StaticListableBeanFactory()
+  beanFactory.addBean("foo", "Bar")
 
-	test("bean()") {
-		val result = beanFactory.bean[String]
-		assert("Bar" === result.get)
-  }
-
-	test("bean() not present") {
-		val result = beanFactory.bean[Boolean]
-		assert(None === result)
-  }
-
-	test("apply[T]()") {
-		val result = beanFactory[String]
-		assert("Bar" === result)
-  }
-
-	test("bean[T](String)") {
-		val result = beanFactory.bean[String]("foo")
+  test("bean()") {
+    val result = beanFactory.bean[String]
     assert("Bar" === result.get)
   }
 
-	test("bean[T](String) not present") {
-		val result = beanFactory.bean[String]("bar")
+  test("bean() not present") {
+    val result = beanFactory.bean[Boolean]
     assert(None === result)
   }
 
-	test("apply[T](String)") {
-		val result = beanFactory[String]("foo")
+  test("apply[T]()") {
+    val result = beanFactory[String]
+    assert("Bar" === result)
+  }
+
+  test("bean[T](String)") {
+    val result = beanFactory.bean[String]("foo")
+    assert("Bar" === result.get)
+  }
+
+  test("bean[T](String) not present") {
+    val result = beanFactory.bean[String]("bar")
+    assert(None === result)
+  }
+
+  test("apply[T](String)") {
+    val result = beanFactory[String]("foo")
     assert("Bar" === result)
   }
 

@@ -20,57 +20,55 @@ import scala.beans.BeanProperty
 
 class CollectionsBean {
 
-	@BeanProperty
-	var seq: scala.collection.Seq[String] = null
+  @BeanProperty
+  var seq: scala.collection.Seq[String] = null
 
-	@BeanProperty
-	var immutableSeq: scala.collection.immutable.Seq[String] = null
+  @BeanProperty
+  var immutableSeq: scala.collection.immutable.Seq[String] = null
 
-	@BeanProperty
-	var mutableSeq: scala.collection.mutable.Seq[String] = null
+  @BeanProperty
+  var mutableSeq: scala.collection.mutable.Seq[String] = null
 
-	@BeanProperty
-	var indexedSeq: scala.collection.IndexedSeq[String] = null
+  @BeanProperty
+  var indexedSeq: scala.collection.IndexedSeq[String] = null
 
-	@BeanProperty
-	var immutableIndexedSeq: scala.collection.immutable.IndexedSeq[String] = null
+  @BeanProperty
+  var immutableIndexedSeq: scala.collection.immutable.IndexedSeq[String] = null
 
-	@BeanProperty
-	var mutableIndexedSeq: scala.collection.mutable.IndexedSeq[String] = null
+  @BeanProperty
+  var mutableIndexedSeq: scala.collection.mutable.IndexedSeq[String] = null
 
-	@BeanProperty
-	var resizableArray: scala.collection.mutable.ResizableArray[String] = null
+  @BeanProperty
+  var resizableArray: scala.collection.mutable.ResizableArray[String] = null
 
-	@BeanProperty
-	var linearSeq: scala.collection.LinearSeq[String] = null
+  @BeanProperty
+  var linearSeq: scala.collection.LinearSeq[String] = null
 
-	@BeanProperty
-	var immutableLinearSeq: scala.collection.immutable.LinearSeq[String] = null
+  @BeanProperty
+  var immutableLinearSeq: scala.collection.immutable.LinearSeq[String] = null
 
-	@BeanProperty
-	var mutableLinearSeq: scala.collection.mutable.LinearSeq[String] = null
+  @BeanProperty
+  var mutableLinearSeq: scala.collection.mutable.LinearSeq[String] = null
 
-	@BeanProperty
-	var buffer: scala.collection.mutable.Buffer[String] = null
+  @BeanProperty
+  var buffer: scala.collection.mutable.Buffer[String] = null
 
-	@BeanProperty
-	var set: scala.collection.Set[String] = null
+  @BeanProperty
+  var set: scala.collection.Set[String] = null
 
-	@BeanProperty
-	var immutableSet: scala.collection.immutable.Set[String] = null
+  @BeanProperty
+  var immutableSet: scala.collection.immutable.Set[String] = null
 
-	@BeanProperty
-	var mutableSet: scala.collection.mutable.Set[String] = null
+  @BeanProperty
+  var mutableSet: scala.collection.mutable.Set[String] = null
 
-	@BeanProperty
-	var map: scala.collection.Map[String, String] = null
+  @BeanProperty
+  var map: scala.collection.Map[String, String] = null
 
-	@BeanProperty
-	var immutableMap: scala.collection.immutable.Map[String, String] = null
+  @BeanProperty
+  var immutableMap: scala.collection.immutable.Map[String, String] = null
 
-	@BeanProperty
-	var mutableMap: scala.collection.mutable.Map[String, String] = null
-
-
+  @BeanProperty
+  var mutableMap: scala.collection.mutable.Map[String, String] = null
 
 }

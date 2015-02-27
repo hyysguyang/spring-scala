@@ -26,30 +26,30 @@ import java.io.OutputStreamWriter
  * @author Arjen Poutsma
  */
 class ElemMessageConverter extends AbstractHttpMessageConverter[Elem](MediaType.APPLICATION_XML, MediaType.TEXT_XML,
-    new MediaType("application", "*+xml")) {
+  new MediaType("application", "*+xml")) {
 
-    final val DEFAULT_CHARSET: Charset = Charset.forName("UTF-8")
+  final val DEFAULT_CHARSET: Charset = Charset.forName("UTF-8")
 
-    def supports(clazz: Class[_]) = {
-        classOf[Elem] == clazz
+  def supports(clazz: Class[_]) = {
+    classOf[Elem] == clazz
+  }
+
+  def readInternal(clazz: Class[_ <: Elem], inputMessage: HttpInputMessage): Elem = {
+    XML.load(inputMessage.getBody)
+  }
+
+  def writeInternal(t: Elem, outputMessage: HttpOutputMessage) {
+    val contentType = getContentType(outputMessage)
+    val writer = new OutputStreamWriter(outputMessage.getBody, contentType)
+
+    XML.write(writer, t, contentType.toString, false, null)
+  }
+
+  private def getContentType(outputMessage: HttpOutputMessage) = {
+    val contentType: MediaType = outputMessage.getHeaders.getContentType
+    if (contentType != null && contentType.getCharSet != null) {
+      contentType.getCharSet
     }
-
-    def readInternal(clazz: Class[_ <: Elem], inputMessage: HttpInputMessage): Elem = {
-        XML.load(inputMessage.getBody)
-    }
-
-    def writeInternal(t: Elem, outputMessage: HttpOutputMessage) {
-        val contentType = getContentType(outputMessage)
-        val writer = new OutputStreamWriter(outputMessage.getBody, contentType)
-
-        XML.write(writer, t, contentType.toString, false, null)
-    }
-
-    private def getContentType(outputMessage: HttpOutputMessage) = {
-        val contentType: MediaType = outputMessage.getHeaders.getContentType
-        if (contentType != null && contentType.getCharSet != null) {
-            contentType.getCharSet
-        }
-        DEFAULT_CHARSET
-    }
+    DEFAULT_CHARSET
+  }
 }

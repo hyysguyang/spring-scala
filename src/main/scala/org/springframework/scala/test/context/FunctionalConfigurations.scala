@@ -45,34 +45,34 @@ case class FunctionalConfigurations(classes: Class[_ <: FunctionalConfiguration]
  */
 object FunctionalConfigurations {
 
-    /**
-     * Retrieves the [[org.springframework.scala.context.function.FunctionalConfiguration]] classes definitions from the
-     * test class annotated with the [[org.springframework.scala.test.context.FunctionalConfigurations]].
-     *
-     * @param testClass test class to be examined (annotated with the
-     *                  [[org.springframework.scala.test.context.FunctionalConfigurations]]).
-     * @return Sequence of [[org.springframework.scala.context.function.FunctionalConfiguration]]s extracted from the
-     *         [[org.springframework.scala.test.context.FunctionalConfigurations]] annotation. Empty sequence if no
-     *         functional configuration class has been provided or
-     *         [[org.springframework.scala.test.context.FunctionalConfigurations]] annotation is missing.
-     */
-    def resolveConfigurationsFromTestClass(testClass: Class[_]): Seq[Class[_ <: FunctionalConfiguration]] = {
-        val mirror = runtimeMirror(defaultClassLoader)
-        val configurationsAnnotationType = typeOf[FunctionalConfigurations]
-        val testClassSymbol = mirror.classSymbol(testClass)
+  /**
+   * Retrieves the [[org.springframework.scala.context.function.FunctionalConfiguration]] classes definitions from the
+   * test class annotated with the [[org.springframework.scala.test.context.FunctionalConfigurations]].
+   *
+   * @param testClass test class to be examined (annotated with the
+   *                  [[org.springframework.scala.test.context.FunctionalConfigurations]]).
+   * @return Sequence of [[org.springframework.scala.context.function.FunctionalConfiguration]]s extracted from the
+   *         [[org.springframework.scala.test.context.FunctionalConfigurations]] annotation. Empty sequence if no
+   *         functional configuration class has been provided or
+   *         [[org.springframework.scala.test.context.FunctionalConfigurations]] annotation is missing.
+   */
+  def resolveConfigurationsFromTestClass(testClass: Class[_]): Seq[Class[_ <: FunctionalConfiguration]] = {
+    val mirror = runtimeMirror(defaultClassLoader)
+    val configurationsAnnotationType = typeOf[FunctionalConfigurations]
+    val testClassSymbol = mirror.classSymbol(testClass)
 
-        testClassSymbol.annotations.find(_.tree.tpe == configurationsAnnotationType) match {
-            case Some(annotation) ⇒ {
-                val configurationsAnnotationArgs = annotation.tree.children.tail.map {
-                    arg ⇒ mirror.runtimeClass(arg.productElement(0).asInstanceOf[Constant].value.asInstanceOf[TypeRef])
-                }
-                val annotationMirror = mirror.reflectClass(configurationsAnnotationType.typeSymbol.asClass)
-                val constructorSymbol = configurationsAnnotationType.decl(termNames.CONSTRUCTOR).asMethod
-                val constructorMirror = annotationMirror.reflectConstructor(constructorSymbol)
-                constructorMirror(configurationsAnnotationArgs.seq).asInstanceOf[FunctionalConfigurations].classes
-            }
-            case None ⇒ Seq()
+    testClassSymbol.annotations.find(_.tree.tpe == configurationsAnnotationType) match {
+      case Some(annotation) ⇒ {
+        val configurationsAnnotationArgs = annotation.tree.children.tail.map {
+          arg ⇒ mirror.runtimeClass(arg.productElement(0).asInstanceOf[Constant].value.asInstanceOf[TypeRef])
         }
+        val annotationMirror = mirror.reflectClass(configurationsAnnotationType.typeSymbol.asClass)
+        val constructorSymbol = configurationsAnnotationType.decl(termNames.CONSTRUCTOR).asMethod
+        val constructorMirror = annotationMirror.reflectConstructor(constructorSymbol)
+        constructorMirror(configurationsAnnotationArgs.seq).asInstanceOf[FunctionalConfigurations].classes
+      }
+      case None ⇒ Seq()
     }
+  }
 
 }

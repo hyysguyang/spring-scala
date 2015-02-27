@@ -16,7 +16,7 @@ package org.springframework.scala.transaction.support
  * limitations under the License.
  */
 
-import org.springframework.transaction.annotation.{Isolation, Propagation}
+import org.springframework.transaction.annotation.{ Isolation, Propagation }
 import org.scalatest.FunSuite
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
@@ -35,9 +35,10 @@ class TransactionManagementTests extends FunSuite with TransactionManagement {
 
   test("default") {
     transactional() {
-      status => {
-        template.update("INSERT INTO USERS(ID, FIRST_NAME, LAST_NAME) VALUES (:id, :first_name, :last_name)", 3.asInstanceOf[Integer], "John", "Johnson")
-      }
+      status ⇒
+        {
+          template.update("INSERT INTO USERS(ID, FIRST_NAME, LAST_NAME) VALUES (:id, :first_name, :last_name)", 3.asInstanceOf[Integer], "John", "Johnson")
+        }
     }
     assertResult(1) {
       template.queryForObject("SELECT COUNT(ID) FROM USERS WHERE ID = 3", classOf[Integer])
@@ -46,9 +47,10 @@ class TransactionManagementTests extends FunSuite with TransactionManagement {
 
   test("custom parameters") {
     transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ) {
-      status => {
-        template.update("INSERT INTO USERS(ID, FIRST_NAME, LAST_NAME) VALUES (:id, :first_name, :last_name)", 4.asInstanceOf[Integer], "John", "Johnson")
-      }
+      status ⇒
+        {
+          template.update("INSERT INTO USERS(ID, FIRST_NAME, LAST_NAME) VALUES (:id, :first_name, :last_name)", 4.asInstanceOf[Integer], "John", "Johnson")
+        }
     }
     assertResult(1) {
       template.queryForObject("SELECT COUNT(ID) FROM USERS WHERE ID = 4", classOf[Integer])

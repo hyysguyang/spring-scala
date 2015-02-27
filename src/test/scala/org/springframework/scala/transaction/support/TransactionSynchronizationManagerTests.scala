@@ -16,7 +16,7 @@
 
 package org.springframework.scala.transaction.support
 
-import org.scalatest.{Matchers, FunSuite}
+import org.scalatest.{ Matchers, FunSuite }
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.junit.runner.RunWith
@@ -35,11 +35,12 @@ class TransactionSynchronizationManagerTests extends FunSuite with Matchers with
   test("Should match single event.") {
     var completionStatus = -1
     transactional() {
-      status => {
-        TransactionSynchronizationManager.registerSynchronization {
-          case AfterCompletionEvent(eventStatus) => completionStatus = eventStatus
+      status ⇒
+        {
+          TransactionSynchronizationManager.registerSynchronization {
+            case AfterCompletionEvent(eventStatus) ⇒ completionStatus = eventStatus
+          }
         }
-      }
     }
     assert(completionStatus === TransactionSynchronization.STATUS_COMMITTED)
   }
@@ -48,25 +49,27 @@ class TransactionSynchronizationManagerTests extends FunSuite with Matchers with
     var beforeEventReceived: Boolean = false
     var afterEventReceived: Boolean = false
     transactional() {
-      status => {
-        TransactionSynchronizationManager.registerSynchronization {
-          case _: BeforeCommitEvent => beforeEventReceived = true
-          case AfterCommitEvent => afterEventReceived = true
+      status ⇒
+        {
+          TransactionSynchronizationManager.registerSynchronization {
+            case _: BeforeCommitEvent ⇒ beforeEventReceived = true
+            case AfterCommitEvent     ⇒ afterEventReceived = true
+          }
         }
-      }
     }
-    beforeEventReceived should be (true)
-    afterEventReceived should be (true)
+    beforeEventReceived should be(true)
+    afterEventReceived should be(true)
   }
 
   test("Should match all succeeded callbacks.") {
     val events = new ListBuffer[SynchronizationEvent]
     transactional() {
-      status => {
-        TransactionSynchronizationManager.registerSynchronization {
-          case e: SynchronizationEvent => events += e
+      status ⇒
+        {
+          TransactionSynchronizationManager.registerSynchronization {
+            case e: SynchronizationEvent ⇒ events += e
+          }
         }
-      }
     }
     assert(events(0) === BeforeCommitEvent(readOnly = false))
     assert(events(1) === BeforeCompletionEvent)
@@ -77,12 +80,13 @@ class TransactionSynchronizationManagerTests extends FunSuite with Matchers with
   test("Should match all rollback callbacks.") {
     val events = new ListBuffer[SynchronizationEvent]
     transactional() {
-      status => {
-        TransactionSynchronizationManager.registerSynchronization {
-          case e: SynchronizationEvent => events += e
+      status ⇒
+        {
+          TransactionSynchronizationManager.registerSynchronization {
+            case e: SynchronizationEvent ⇒ events += e
+          }
+          status.setRollbackOnly()
         }
-        status.setRollbackOnly()
-      }
     }
     assert(events(0) === BeforeCompletionEvent)
     assert(events(1) === AfterCompletionEvent(TransactionSynchronization.STATUS_ROLLED_BACK))

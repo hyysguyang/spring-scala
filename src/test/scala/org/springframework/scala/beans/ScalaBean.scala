@@ -20,11 +20,11 @@ import scala.beans.BeanProperty
 
 class ScalaBean {
 
-	val readOnly: String = "Foo"
+  val readOnly: String = "Foo"
 
-	var readWrite: String = "Foo"
+  var readWrite: String = "Foo"
 
-	@BeanProperty
-	var beanProperty: String = "Foo"
+  @BeanProperty
+  var beanProperty: String = "Foo"
 
 }

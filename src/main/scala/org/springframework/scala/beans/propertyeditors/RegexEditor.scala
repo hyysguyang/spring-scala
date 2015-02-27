@@ -28,17 +28,17 @@ import util.matching.Regex
  */
 class RegexEditor extends PropertyEditorSupport {
 
-    override def setAsText(text: String) {
-        text match {
-            case null ⇒ setValue(null)
-            case s    ⇒ setValue(s.r)
-        }
+  override def setAsText(text: String) {
+    text match {
+      case null ⇒ setValue(null)
+      case s    ⇒ setValue(s.r)
     }
+  }
 
-    override def getAsText: String = {
-        getValue match {
-            case null         ⇒ ""
-            case regex: Regex ⇒ regex.pattern.pattern()
-        }
+  override def getAsText: String = {
+    getValue match {
+      case null         ⇒ ""
+      case regex: Regex ⇒ regex.pattern.pattern()
     }
+  }
 }

@@ -18,7 +18,7 @@ package org.springframework.scala.beans.factory.function
 
 import org.springframework.context.support.StaticApplicationContext
 import org.springframework.beans.factory.config.BeanDefinition
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.{ BeforeAndAfterEach, FunSuite }
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -28,44 +28,42 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class FunctionalRootBeanDefinitionTests extends FunSuite with BeforeAndAfterEach {
 
-	val applicationContext = new StaticApplicationContext()
+  val applicationContext = new StaticApplicationContext()
 
-	var n: Int = 0
+  var n: Int = 0
 
-	val beanFunction = () => {
-		n += 1
-		n
-	}
+  val beanFunction = () ⇒ {
+    n += 1
+    n
+  }
 
-	override protected def beforeEach() {
-		n = 0
-	}
+  override protected def beforeEach() {
+    n = 0
+  }
 
-	test("singleton") {
-		val bd = new FunctionalRootBeanDefinition[Int](beanFunction, classOf[Int])
-		bd.setScope(BeanDefinition.SCOPE_SINGLETON)
-		applicationContext.registerBeanDefinition("function", bd)
+  test("singleton") {
+    val bd = new FunctionalRootBeanDefinition[Int](beanFunction, classOf[Int])
+    bd.setScope(BeanDefinition.SCOPE_SINGLETON)
+    applicationContext.registerBeanDefinition("function", bd)
 
-		val value1 = applicationContext.getBean("function")
-		val value2 = applicationContext.getBean("function")
+    val value1 = applicationContext.getBean("function")
+    val value2 = applicationContext.getBean("function")
 
-		assert(value1 == value2)
-		assert(n == 1)
-		
-	}
+    assert(value1 == value2)
+    assert(n == 1)
 
-	test("prototype") {
-		val bd = new FunctionalRootBeanDefinition[Int](beanFunction, classOf[Int])
-		bd.setScope(BeanDefinition.SCOPE_PROTOTYPE)
-		applicationContext.registerBeanDefinition("function", bd)
+  }
 
-		val value1 = applicationContext.getBean("function")
-		val value2 = applicationContext.getBean("function")
+  test("prototype") {
+    val bd = new FunctionalRootBeanDefinition[Int](beanFunction, classOf[Int])
+    bd.setScope(BeanDefinition.SCOPE_PROTOTYPE)
+    applicationContext.registerBeanDefinition("function", bd)
 
-		assert(value1 != value2)
-		assert(n == 2)
-	}
+    val value1 = applicationContext.getBean("function")
+    val value2 = applicationContext.getBean("function")
+
+    assert(value1 != value2)
+    assert(n == 2)
+  }
 }
-
-
 

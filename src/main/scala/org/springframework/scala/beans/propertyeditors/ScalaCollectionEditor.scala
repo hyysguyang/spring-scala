@@ -32,36 +32,36 @@ import scala.collection.mutable
  */
 class ScalaCollectionEditor[T, U](val builderFunction: () ⇒ mutable.Builder[T, _],
                                   val nullAsEmptyCollection: Boolean = false)
-        extends PropertyEditorSupport {
+    extends PropertyEditorSupport {
 
-    override def setAsText(text: String) {
-        setValue(text)
-    }
+  override def setAsText(text: String) {
+    setValue(text)
+  }
 
-    override def setValue(value: AnyRef) {
-        val builder = builderFunction()
-        value match {
-            case null if !nullAsEmptyCollection ⇒ {
-                super.setValue(null)
-                return
-            }
-            case null if nullAsEmptyCollection ⇒ {
-                builder.clear()
-            }
-            case source: TraversableOnce[T] ⇒ {
-                builder ++= source
-            }
-            case javaCollection: java.util.Collection[T] ⇒ {
-                builder ++= collectionAsScalaIterable(javaCollection)
-            }
-            case javaMap: java.util.Map[T, U] ⇒ {
-                val mapBuilder = builder.asInstanceOf[mutable.Builder[(T, U), _]]
-                mapBuilder ++= mapAsScalaMap(javaMap)
-            }
-            case el ⇒ {
-                builder += el.asInstanceOf[T]
-            }
-        }
-        super.setValue(builder.result())
+  override def setValue(value: AnyRef) {
+    val builder = builderFunction()
+    value match {
+      case null if !nullAsEmptyCollection ⇒ {
+        super.setValue(null)
+        return
+      }
+      case null if nullAsEmptyCollection ⇒ {
+        builder.clear()
+      }
+      case source: TraversableOnce[T] ⇒ {
+        builder ++= source
+      }
+      case javaCollection: java.util.Collection[T] ⇒ {
+        builder ++= collectionAsScalaIterable(javaCollection)
+      }
+      case javaMap: java.util.Map[T, U] ⇒ {
+        val mapBuilder = builder.asInstanceOf[mutable.Builder[(T, U), _]]
+        mapBuilder ++= mapAsScalaMap(javaMap)
+      }
+      case el ⇒ {
+        builder += el.asInstanceOf[T]
+      }
     }
+    super.setValue(builder.result())
+  }
 }

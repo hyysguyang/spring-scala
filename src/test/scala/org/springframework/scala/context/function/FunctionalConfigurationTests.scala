@@ -18,7 +18,7 @@ package org.springframework.scala.context.function
 
 import org.springframework.beans.factory.config.BeanDefinition
 import org.springframework.context.support.GenericApplicationContext
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.{ BeforeAndAfterEach, FunSuite }
 import org.springframework.beans.factory.support.DefaultBeanNameGenerator
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -30,354 +30,354 @@ import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostP
 @RunWith(classOf[JUnitRunner])
 class FunctionalConfigurationTests extends FunSuite with BeforeAndAfterEach {
 
-	var applicationContext: GenericApplicationContext = _
+  var applicationContext: GenericApplicationContext = _
 
-	val beanNameGenerator = new DefaultBeanNameGenerator()
+  val beanNameGenerator = new DefaultBeanNameGenerator()
 
-	override protected def beforeEach() {
-		applicationContext = new GenericApplicationContext()
-	}
+  override protected def beforeEach() {
+    applicationContext = new GenericApplicationContext()
+  }
 
-	test("getBean()") {
-		val config = new FunctionalConfiguration {
-			bean("foo") {
-				"Foo"
-	    }
-		}
-		config.register(applicationContext, beanNameGenerator)
-applicationContext.refresh()
-		val foo = config.getBean[String]("foo")
-		assert("Foo" === foo)
-	}
+  test("getBean()") {
+    val config = new FunctionalConfiguration {
+      bean("foo") {
+        "Foo"
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val foo = config.getBean[String]("foo")
+    assert("Foo" === foo)
+  }
 
-	test("bean() aliases") {
-		val config = new FunctionalConfiguration {
+  test("bean() aliases") {
+    val config = new FunctionalConfiguration {
 
-			bean(name = "foo", aliases = Seq("bar")) {
-				"Foo"
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val foo = applicationContext.getBean("foo", classOf[String])
-		val bar = applicationContext.getBean("bar", classOf[String])
+      bean(name = "foo", aliases = Seq("bar")) {
+        "Foo"
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val foo = applicationContext.getBean("foo", classOf[String])
+    val bar = applicationContext.getBean("bar", classOf[String])
 
-		assert(foo eq bar)
-	}
+    assert(foo eq bar)
+  }
 
-	test("singleton()") {
-		var count = 0
+  test("singleton()") {
+    var count = 0
 
-		val config = new FunctionalConfiguration {
+    val config = new FunctionalConfiguration {
 
-			val foo = singleton("foo") {
-				count += 1
-				new Person("John", "Doe")
-			}
-		}
-
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val beanFromConfig: Person = config.foo()
-		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
-		assert(beanFromConfig eq beanFromBeanFactory)
-		assert(1 == count)
-	}
-
-	test("prototype()") {
-		var count = 0
-
-		val config = new FunctionalConfiguration {
-
-			val foo = prototype("foo") {
-				count += 1
-				new Person("John", "Doe")
-			}
-		}
-
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val beanFromConfig1 = config.foo()
-		val beanFromConfig2 = config.foo()
-		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
-		assert(!(beanFromConfig1 eq beanFromConfig2))
-		assert(!(beanFromConfig1 eq beanFromBeanFactory))
-		assert(!(beanFromConfig2 eq beanFromBeanFactory))
-		assert(3 == count)
-	}
-
-	test("singleton bean()") {
-		var count = 0
-
-		val config = new FunctionalConfiguration {
-
-			val foo = bean("foo") {
-				count += 1
-				new Person("John", "Doe")
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val beanFromConfig1 = config.foo()
-		val beanFromConfig2 = config.foo()
-		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
-		assert(beanFromConfig1 eq beanFromConfig2)
-		assert(beanFromConfig1 eq beanFromBeanFactory)
-		assert(1 == count)
-	}
-
-	test("prototype bean()") {
-		var count = 0
-
-		val config = new FunctionalConfiguration {
-
-			val foo = bean("foo", scope = BeanDefinition.SCOPE_PROTOTYPE) {
-				count += 1
-				new Person("John", "Doe")
-			}
-		}
-
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val beanFromConfig1 = config.foo()
-		val beanFromConfig2 = config.foo()
-		val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
-		assert(!(beanFromConfig1 eq beanFromConfig2))
-		assert(!(beanFromConfig1 eq beanFromBeanFactory))
-		assert(!(beanFromConfig2 eq beanFromBeanFactory))
-		assert(3 == count)
-	}
-
-	test("references") {
-		val config = new FunctionalConfiguration() {
-			val jack = bean() {
-				new Person("Jack", "Doe")
-			}
-
-			val jane = bean() {
-				new Person("Jane", "Doe")
-			}
-
-			val john = bean() {
-				val person = new Person("John", "Doe")
-				person.father = jack()
-				person.mother = jane()
-				person
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val john = config.john()
-		assert(john.father eq config.jack())
-		assert(john.mother eq config.jane())
-	}
-
-	test("composition through mixin") {
-		trait FirstNameConfig extends FunctionalConfiguration {
-
-			lazy val firstName = bean() {
-				"John"
-			}
-		}
-		trait LastNameConfig extends FunctionalConfiguration {
-
-			lazy val lastName = bean() {
-				"Doe"
-			}
-		}
-		val config = new FirstNameConfig with LastNameConfig {
-			val john = bean() {
-				new Person(firstName(), lastName())
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val john = config.john()
-		assert("John" == john.firstName)
-		assert("Doe" == john.lastName)
-	}
-
-	test("composition through inheritance") {
-		class FirstNameConfig extends FunctionalConfiguration {
-
-			val firstName = bean() {
-				"John"
-			}
-		}
-		class LastNameConfig extends FirstNameConfig {
-
-			val lastName = bean() {
-				"Doe"
-			}
-		}
-		class Config extends LastNameConfig {
-
-			val john = bean() {
-				new Person(firstName(), lastName())
-			}
-		}
-		val config = new Config
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		val john = config.john()
-		assert("John" == john.firstName)
-		assert("Doe" == john.lastName)
-	}
-
-	test("init and destroy") {
-		val applicationContext = new GenericApplicationContext()
-
-		val config = new FunctionalConfiguration {
-
-			val foo = bean("foo") {
-				new InitializablePerson("John", "Doe")
-			} init {
-				_.initialize()
-			} destroy {
-				_.destroy()
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-		applicationContext.refresh()
-
-		val foo = applicationContext.getBean("foo", classOf[InitializablePerson])
-		assert(foo.initialised)
-		applicationContext.close()
-		assert(!foo.initialised)
-	}
-
-    test("init and destroy with multiple configuration") {
-        val applicationContext = new GenericApplicationContext()
-
-        val config = new FunctionalConfiguration {
-
-            val foo = bean("foo") {
-                new InitializablePerson("John", "Doe")
-            } init {
-                _.initialize()
-            } destroy {
-                _.destroy()
-            }
-        }
-
-        val config2 = new FunctionalConfiguration {
-
-            val foo = bean("foo2") {
-                new InitializablePerson("John2", "Doe2")
-            } init {
-                _.initialize()
-            } destroy {
-                _.destroy()
-            }
-        }
-
-        config.register(applicationContext, beanNameGenerator)
-        config2.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-
-        val foo = applicationContext.getBean("foo", classOf[InitializablePerson])
-        val foo2 = applicationContext.getBean("foo2", classOf[InitializablePerson])
-        assert(foo.initialised)
-        assert(foo2.initialised)
-        applicationContext.close()
-        assert(!foo2.initialised)
+      val foo = singleton("foo") {
+        count += 1
+        new Person("John", "Doe")
+      }
     }
 
-	test("profile") {
-		applicationContext.getEnvironment.addActiveProfile("profile1")
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val beanFromConfig: Person = config.foo()
+    val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
+    assert(beanFromConfig eq beanFromBeanFactory)
+    assert(1 == count)
+  }
 
-		val config = new FunctionalConfiguration() {
+  test("prototype()") {
+    var count = 0
 
-			profile("profile1") {
-				bean("foo") {
-					"Foo"
-				}
-			}
+    val config = new FunctionalConfiguration {
 
-			profile("profile2") {
-				bean("bar") {
-					"Bar"
-				}
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
-		assert(applicationContext.containsBean("foo"))
-		assert(!applicationContext.containsBean("bar"))
-		assert("Foo" == applicationContext.getBean("foo"))
-	}
+      val foo = prototype("foo") {
+        count += 1
+        new Person("John", "Doe")
+      }
+    }
 
-	test("importXml") {
-		val config = new FunctionalConfiguration() {
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val beanFromConfig1 = config.foo()
+    val beanFromConfig2 = config.foo()
+    val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
+    assert(!(beanFromConfig1 eq beanFromConfig2))
+    assert(!(beanFromConfig1 eq beanFromBeanFactory))
+    assert(!(beanFromConfig2 eq beanFromBeanFactory))
+    assert(3 == count)
+  }
 
-			importXml(
-				"classpath:/org/springframework/scala/context/function/imported.xml")
+  test("singleton bean()") {
+    var count = 0
 
-			val john = bean() {
-				new Person(getBean[String]("firstName"), getBean[String]("lastName"))
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-        applicationContext.refresh()
+    val config = new FunctionalConfiguration {
 
-		assert("John" == config.john().firstName)
-		assert("Doe" == config.john().lastName)
-	}
+      val foo = bean("foo") {
+        count += 1
+        new Person("John", "Doe")
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val beanFromConfig1 = config.foo()
+    val beanFromConfig2 = config.foo()
+    val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
+    assert(beanFromConfig1 eq beanFromConfig2)
+    assert(beanFromConfig1 eq beanFromBeanFactory)
+    assert(1 == count)
+  }
 
-	test("importClass") {
-		val config = new FunctionalConfiguration() {
+  test("prototype bean()") {
+    var count = 0
 
-			importClass(classOf[MyAnnotatedConfiguration])
+    val config = new FunctionalConfiguration {
 
-			val john = bean() {
-				new Person(getBean[String]("firstName"), getBean[String]("lastName"))
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-		applicationContext.refresh()
+      val foo = bean("foo", scope = BeanDefinition.SCOPE_PROTOTYPE) {
+        count += 1
+        new Person("John", "Doe")
+      }
+    }
 
-		assert("John" == config.john().firstName)
-		assert("Doe" == config.john().lastName)
- 	}
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val beanFromConfig1 = config.foo()
+    val beanFromConfig2 = config.foo()
+    val beanFromBeanFactory = applicationContext.getBean("foo", classOf[Person])
+    assert(!(beanFromConfig1 eq beanFromConfig2))
+    assert(!(beanFromConfig1 eq beanFromBeanFactory))
+    assert(!(beanFromConfig2 eq beanFromBeanFactory))
+    assert(3 == count)
+  }
 
-	test("importClass via tag") {
-		val config = new FunctionalConfiguration() {
-
-			importClass[MyAnnotatedConfiguration]()
-
-			val john = bean() {
-				new Person(getBean[String]("firstName"), getBean[String]("lastName"))
-			}
-		}
-		config.register(applicationContext, beanNameGenerator)
-		applicationContext.refresh()
-
-		assert("John" == config.john().firstName)
-		assert("Doe" == config.john().lastName)
-	}
-
-	test("beanPostProcessor") {
-		val config = new FunctionalConfiguration {
-
-			bean("john") {
-				new AutowirePerson("John", "Doe")
+  test("references") {
+    val config = new FunctionalConfiguration() {
+      val jack = bean() {
+        new Person("Jack", "Doe")
       }
 
-			bean("jane") {
-				new Person("Jane", "Roe")
+      val jane = bean() {
+        new Person("Jane", "Doe")
       }
 
-			bean() { new AutowiredAnnotationBeanPostProcessor}
+      val john = bean() {
+        val person = new Person("John", "Doe")
+        person.father = jack()
+        person.mother = jane()
+        person
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val john = config.john()
+    assert(john.father eq config.jack())
+    assert(john.mother eq config.jane())
+  }
 
-		}
+  test("composition through mixin") {
+    trait FirstNameConfig extends FunctionalConfiguration {
 
-		config.register(applicationContext, beanNameGenerator)
-		applicationContext.refresh()
+      lazy val firstName = bean() {
+        "John"
+      }
+    }
+    trait LastNameConfig extends FunctionalConfiguration {
 
-		val jane= applicationContext.getBean("jane", classOf[Person])
-		val john = applicationContext.getBean("john", classOf[AutowirePerson])
+      lazy val lastName = bean() {
+        "Doe"
+      }
+    }
+    val config = new FirstNameConfig with LastNameConfig {
+      val john = bean() {
+        new Person(firstName(), lastName())
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val john = config.john()
+    assert("John" == john.firstName)
+    assert("Doe" == john.lastName)
+  }
 
-		assert(jane === john.friend)
-		}
+  test("composition through inheritance") {
+    class FirstNameConfig extends FunctionalConfiguration {
+
+      val firstName = bean() {
+        "John"
+      }
+    }
+    class LastNameConfig extends FirstNameConfig {
+
+      val lastName = bean() {
+        "Doe"
+      }
+    }
+    class Config extends LastNameConfig {
+
+      val john = bean() {
+        new Person(firstName(), lastName())
+      }
+    }
+    val config = new Config
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    val john = config.john()
+    assert("John" == john.firstName)
+    assert("Doe" == john.lastName)
+  }
+
+  test("init and destroy") {
+    val applicationContext = new GenericApplicationContext()
+
+    val config = new FunctionalConfiguration {
+
+      val foo = bean("foo") {
+        new InitializablePerson("John", "Doe")
+      } init {
+        _.initialize()
+      } destroy {
+        _.destroy()
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+
+    val foo = applicationContext.getBean("foo", classOf[InitializablePerson])
+    assert(foo.initialised)
+    applicationContext.close()
+    assert(!foo.initialised)
+  }
+
+  test("init and destroy with multiple configuration") {
+    val applicationContext = new GenericApplicationContext()
+
+    val config = new FunctionalConfiguration {
+
+      val foo = bean("foo") {
+        new InitializablePerson("John", "Doe")
+      } init {
+        _.initialize()
+      } destroy {
+        _.destroy()
+      }
+    }
+
+    val config2 = new FunctionalConfiguration {
+
+      val foo = bean("foo2") {
+        new InitializablePerson("John2", "Doe2")
+      } init {
+        _.initialize()
+      } destroy {
+        _.destroy()
+      }
+    }
+
+    config.register(applicationContext, beanNameGenerator)
+    config2.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+
+    val foo = applicationContext.getBean("foo", classOf[InitializablePerson])
+    val foo2 = applicationContext.getBean("foo2", classOf[InitializablePerson])
+    assert(foo.initialised)
+    assert(foo2.initialised)
+    applicationContext.close()
+    assert(!foo2.initialised)
+  }
+
+  test("profile") {
+    applicationContext.getEnvironment.addActiveProfile("profile1")
+
+    val config = new FunctionalConfiguration() {
+
+      profile("profile1") {
+        bean("foo") {
+          "Foo"
+        }
+      }
+
+      profile("profile2") {
+        bean("bar") {
+          "Bar"
+        }
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+    assert(applicationContext.containsBean("foo"))
+    assert(!applicationContext.containsBean("bar"))
+    assert("Foo" == applicationContext.getBean("foo"))
+  }
+
+  test("importXml") {
+    val config = new FunctionalConfiguration() {
+
+      importXml(
+        "classpath:/org/springframework/scala/context/function/imported.xml")
+
+      val john = bean() {
+        new Person(getBean[String]("firstName"), getBean[String]("lastName"))
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+
+    assert("John" == config.john().firstName)
+    assert("Doe" == config.john().lastName)
+  }
+
+  test("importClass") {
+    val config = new FunctionalConfiguration() {
+
+      importClass(classOf[MyAnnotatedConfiguration])
+
+      val john = bean() {
+        new Person(getBean[String]("firstName"), getBean[String]("lastName"))
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+
+    assert("John" == config.john().firstName)
+    assert("Doe" == config.john().lastName)
+  }
+
+  test("importClass via tag") {
+    val config = new FunctionalConfiguration() {
+
+      importClass[MyAnnotatedConfiguration]()
+
+      val john = bean() {
+        new Person(getBean[String]("firstName"), getBean[String]("lastName"))
+      }
+    }
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+
+    assert("John" == config.john().firstName)
+    assert("Doe" == config.john().lastName)
+  }
+
+  test("beanPostProcessor") {
+    val config = new FunctionalConfiguration {
+
+      bean("john") {
+        new AutowirePerson("John", "Doe")
+      }
+
+      bean("jane") {
+        new Person("Jane", "Roe")
+      }
+
+      bean() { new AutowiredAnnotationBeanPostProcessor }
+
+    }
+
+    config.register(applicationContext, beanNameGenerator)
+    applicationContext.refresh()
+
+    val jane = applicationContext.getBean("jane", classOf[Person])
+    val john = applicationContext.getBean("john", classOf[AutowirePerson])
+
+    assert(jane === john.friend)
+  }
 
 }

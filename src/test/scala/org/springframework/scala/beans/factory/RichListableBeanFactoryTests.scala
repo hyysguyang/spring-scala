@@ -28,25 +28,25 @@ import org.junit.runner.RunWith
 @RunWith(classOf[JUnitRunner])
 class RichListableBeanFactoryTests extends FunSuite {
 
-	val bean = new MyBean
+  val bean = new MyBean
 
-	val beanFactory = new StaticListableBeanFactory
-	beanFactory.addBean("bean", bean)
+  val beanFactory = new StaticListableBeanFactory
+  beanFactory.addBean("bean", bean)
 
-	test("getBeanNamesForType") {
-		val result = beanFactory.beanNamesForType[MyBean]()
+  test("getBeanNamesForType") {
+    val result = beanFactory.beanNamesForType[MyBean]()
 
-		assert(1 == result.size)
-		assert("bean" === result(0))
+    assert(1 == result.size)
+    assert("bean" === result(0))
   }
 
-	test("getBeansOfType") {
-		val result = beanFactory.beansOfType[MyBean]()
+  test("getBeansOfType") {
+    val result = beanFactory.beansOfType[MyBean]()
 
-		assert(1 == result.size)
-		assert(bean === result("bean"))
+    assert(1 == result.size)
+    assert(bean === result("bean"))
   }
 
-	class MyBean
+  class MyBean
 
 }

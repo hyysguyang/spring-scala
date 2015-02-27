@@ -26,41 +26,41 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class FunctionalConfigApplicationContextTests extends FunSuite {
 
-	test("registerClass") {
-		val appContext = new FunctionalConfigApplicationContext()
-		appContext.registerClass[MyFunctionalConfiguration]
-        appContext.refresh()
-		val foo = appContext.getBean("foo")
-		assert("Foo" == foo)
-	}
+  test("registerClass") {
+    val appContext = new FunctionalConfigApplicationContext()
+    appContext.registerClass[MyFunctionalConfiguration]
+    appContext.refresh()
+    val foo = appContext.getBean("foo")
+    assert("Foo" == foo)
+  }
 
-	test("registerClasses") {
-		val appContext = new FunctionalConfigApplicationContext()
-		appContext.registerClasses(classOf[MyFunctionalConfiguration])
-        appContext.refresh()
-		val foo = appContext.getBean("foo")
-		assert("Foo" == foo)
-	}
+  test("registerClasses") {
+    val appContext = new FunctionalConfigApplicationContext()
+    appContext.registerClasses(classOf[MyFunctionalConfiguration])
+    appContext.refresh()
+    val foo = appContext.getBean("foo")
+    assert("Foo" == foo)
+  }
 
-	test("registerConfigurations") {
-		val appContext = new FunctionalConfigApplicationContext()
-		appContext.registerConfigurations(new MyFunctionalConfiguration)
-        appContext.refresh()
-		val foo = appContext.getBean("foo")
-		assert("Foo" == foo)
-	}
+  test("registerConfigurations") {
+    val appContext = new FunctionalConfigApplicationContext()
+    appContext.registerConfigurations(new MyFunctionalConfiguration)
+    appContext.refresh()
+    val foo = appContext.getBean("foo")
+    assert("Foo" == foo)
+  }
 
-	test("companion single class") {
-		val appContext = FunctionalConfigApplicationContext[MyFunctionalConfiguration]
-		val foo = appContext.getBean("foo")
-		assert("Foo" == foo)
-	}
+  test("companion single class") {
+    val appContext = FunctionalConfigApplicationContext[MyFunctionalConfiguration]
+    val foo = appContext.getBean("foo")
+    assert("Foo" == foo)
+  }
 
-	test("companion multiple classes") {
-		val appContext = FunctionalConfigApplicationContext(classOf[MyFunctionalConfiguration])
-		val foo = appContext.getBean("foo")
-		assert("Foo" == foo)
-	}
+  test("companion multiple classes") {
+    val appContext = FunctionalConfigApplicationContext(classOf[MyFunctionalConfiguration])
+    val foo = appContext.getBean("foo")
+    assert("Foo" == foo)
+  }
 
   test("context[Class]") {
     val appContext = FunctionalConfigApplicationContext(classOf[MyFunctionalConfiguration])
@@ -73,10 +73,10 @@ class FunctionalConfigApplicationContextTests extends FunSuite {
     val foo = appContext[String]("foo")
     assert("Foo" == foo)
   }
-	test("context.beansOfType[String] call without empty parameter list") {
-		val appContext = FunctionalConfigApplicationContext(classOf[MyFunctionalConfiguration])
-		val foos : Map[String,String] = appContext.beansOfType[String]
-		assert(1 === foos.size)
-	}
+  test("context.beansOfType[String] call without empty parameter list") {
+    val appContext = FunctionalConfigApplicationContext(classOf[MyFunctionalConfiguration])
+    val foos: Map[String, String] = appContext.beansOfType[String]
+    assert(1 === foos.size)
+  }
 
 }

@@ -43,5 +43,4 @@ class AdviceConversionsTests extends FunSuite {
     intercept[AfterAdviceException](advicedAfter.toString)
   }
 
-
 }

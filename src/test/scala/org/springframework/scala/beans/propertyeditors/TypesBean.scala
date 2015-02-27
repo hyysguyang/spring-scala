@@ -23,9 +23,8 @@ import scala.util.matching.Regex
  * @author Arjen Poutsma
  */
 class TypesBean {
-	
-	@BeanProperty
-	var regex: Regex = null
-	
+
+  @BeanProperty
+  var regex: Regex = null
 
 }

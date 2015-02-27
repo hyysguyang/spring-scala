@@ -18,14 +18,14 @@ package org.springframework.scala.transaction.function
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
-import org.springframework.transaction.support.{DefaultTransactionStatus, AbstractPlatformTransactionManager, TransactionSynchronizationManager}
+import org.scalatest.{ BeforeAndAfterEach, FunSuite }
+import org.springframework.transaction.support.{ DefaultTransactionStatus, AbstractPlatformTransactionManager, TransactionSynchronizationManager }
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.TransactionDefinition
 import org.springframework.aop.config.AopConfigUtils
 import org.springframework.aop.framework.autoproxy.InfrastructureAdvisorAutoProxyCreator
 import org.springframework.transaction.config.TransactionManagementConfigUtils
-import org.springframework.scala.context.function.{FunctionalConfigApplicationContext, FunctionalConfiguration}
+import org.springframework.scala.context.function.{ FunctionalConfigApplicationContext, FunctionalConfiguration }
 
 /**
  * @author Maciej Zientarski
@@ -51,7 +51,7 @@ class TransactionSupportTests extends FunSuite with BeforeAndAfterEach {
 
     applicationContext.registerConfigurations(config)
 
-      applicationContext.refresh()
+    applicationContext.refresh()
 
     //then
     val infrastructureAdvisorAutoProxyCreator = applicationContext.getBean(

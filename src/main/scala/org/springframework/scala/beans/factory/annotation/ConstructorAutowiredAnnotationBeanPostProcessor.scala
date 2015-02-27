@@ -47,35 +47,35 @@ import scala.collection.mutable
  */
 @Component
 class ConstructorAutowiredAnnotationBeanPostProcessor
-        extends InstantiationAwareBeanPostProcessorAdapter with Ordered {
+    extends InstantiationAwareBeanPostProcessorAdapter with Ordered {
 
-    protected final val logger: Log = LogFactory.getLog(getClass)
+  protected final val logger: Log = LogFactory.getLog(getClass)
 
-    private val autowiredAnnotationTypes: mutable.Set[Class[_ <: Annotation]] =
-        new mutable.HashSet[Class[_ <: Annotation]]()
+  private val autowiredAnnotationTypes: mutable.Set[Class[_ <: Annotation]] =
+    new mutable.HashSet[Class[_ <: Annotation]]()
 
-    autowiredAnnotationTypes += classOf[Autowired]
+  autowiredAnnotationTypes += classOf[Autowired]
 
-    try {
-        val cl = classOf[ConstructorAutowiredAnnotationBeanPostProcessor].getClassLoader
-        autowiredAnnotationTypes += cl.loadClass("javax.inject.Inject").asInstanceOf[Class[_ <: Annotation]]
-        logger.info("JSR-330 'javax.inject.Inject' annotation found and supported for autowiring")
-    } catch {
-        case ex: ClassNotFoundException ⇒
+  try {
+    val cl = classOf[ConstructorAutowiredAnnotationBeanPostProcessor].getClassLoader
+    autowiredAnnotationTypes += cl.loadClass("javax.inject.Inject").asInstanceOf[Class[_ <: Annotation]]
+    logger.info("JSR-330 'javax.inject.Inject' annotation found and supported for autowiring")
+  } catch {
+    case ex: ClassNotFoundException ⇒
+  }
+
+  @BeanProperty
+  var order: Int = org.springframework.core.Ordered.LOWEST_PRECEDENCE
+
+  override def determineCandidateConstructors(beanClass: Class[_], beanName: String): Array[Constructor[_]] = {
+    val constructors = beanClass.getDeclaredConstructors
+    if (isAutowiredClass(beanClass) && constructors.size == 1) {
+      constructors
+    } else {
+      null
     }
+  }
 
-    @BeanProperty
-    var order: Int = org.springframework.core.Ordered.LOWEST_PRECEDENCE
-
-    override def determineCandidateConstructors(beanClass: Class[_], beanName: String): Array[Constructor[_]] = {
-        val constructors = beanClass.getDeclaredConstructors
-        if (isAutowiredClass(beanClass) && constructors.size == 1) {
-            constructors
-        } else {
-            null
-        }
-    }
-
-    private def isAutowiredClass(beanClass: Class[_]): Boolean =
-        autowiredAnnotationTypes.exists(AnnotationUtils.getAnnotation(beanClass, _) != null)
+  private def isAutowiredClass(beanClass: Class[_]): Boolean =
+    autowiredAnnotationTypes.exists(AnnotationUtils.getAnnotation(beanClass, _) != null)
 }

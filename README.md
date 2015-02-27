@@ -2,6 +2,27 @@
 
 We will continue provide bug fix and enhancement for the latest spring framework support.
 
+#How to use it
+
+Checkout source code and build it:
+
+git clone https://github.com/hyysguyang/spring-scala
+
+sbt ";publishLocal;publishM2"
+
+
+##SBT
+
+`libraryDependencies += "org.springframework.scala" %% "spring-scala" % "1.0.0.RC1"`
+
+##Maven
+```
+<dependency>
+    <groupId>org.springframework.scala</groupId>
+    <artifactId>spring-scala_2.11</artifactId>
+    <version>1.0.0.RC1</version>
+</dependency>
+```
 
 # Spring Scala
 

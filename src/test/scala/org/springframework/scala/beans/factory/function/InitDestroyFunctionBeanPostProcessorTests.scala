@@ -26,49 +26,49 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class InitDestroyFunctionBeanPostProcessorTests extends FunSuite {
 
-	val bpp = new InitDestroyFunctionBeanPostProcessor
+  val bpp = new InitDestroyFunctionBeanPostProcessor
 
-	test("initFunctions") {
-		val beanName = "foo"
-		val bean = "bar"
+  test("initFunctions") {
+    val beanName = "foo"
+    val bean = "bar"
 
-		var function1Invoked = false
-		var function2Invoked = false
+    var function1Invoked = false
+    var function2Invoked = false
 
-		bpp.registerInitFunction(beanName, (s: String) => {
-			assert(!function2Invoked)
-			function1Invoked = true
-		})
-		bpp.registerInitFunction(beanName, (s: String) => {
-			assert(function1Invoked)
-			function2Invoked = true
-		})
+    bpp.registerInitFunction(beanName, (s: String) ⇒ {
+      assert(!function2Invoked)
+      function1Invoked = true
+    })
+    bpp.registerInitFunction(beanName, (s: String) ⇒ {
+      assert(function1Invoked)
+      function2Invoked = true
+    })
 
-		val result = bpp.postProcessBeforeInitialization(bean, beanName)
+    val result = bpp.postProcessBeforeInitialization(bean, beanName)
 
-		assert(result eq bean)
-		assert(function1Invoked)
-		assert(function2Invoked)
-	}
+    assert(result eq bean)
+    assert(function1Invoked)
+    assert(function2Invoked)
+  }
 
-	test("destroyFunctions") {
-		val beanName = "foo"
-		var function1Invoked = false
-		var function2Invoked = false
+  test("destroyFunctions") {
+    val beanName = "foo"
+    var function1Invoked = false
+    var function2Invoked = false
 
-		bpp.registerDestroyFunction(beanName, (s: String) => {
-			assert(!function2Invoked)
-			function1Invoked = true
-		})
-		bpp.registerDestroyFunction(beanName, (s: String) => {
-			assert(function1Invoked)
-			function2Invoked = true
-		})
+    bpp.registerDestroyFunction(beanName, (s: String) ⇒ {
+      assert(!function2Invoked)
+      function1Invoked = true
+    })
+    bpp.registerDestroyFunction(beanName, (s: String) ⇒ {
+      assert(function1Invoked)
+      function2Invoked = true
+    })
 
-		bpp.postProcessBeforeDestruction("bar", beanName)
+    bpp.postProcessBeforeDestruction("bar", beanName)
 
-		assert(function1Invoked)
-		assert(function2Invoked)
-	}
+    assert(function1Invoked)
+    assert(function2Invoked)
+  }
 
 }

@@ -18,10 +18,10 @@ package org.springframework.scala.context.function
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, GivenWhenThen, FunSuite}
+import org.scalatest.{ Matchers, GivenWhenThen, FunSuite }
 import org.scalatest.matchers.ShouldMatchers
 import org.springframework.stereotype.Component
-import org.springframework.context.annotation.{AnnotationScopeMetadataResolver, ScopedProxyMode}
+import org.springframework.context.annotation.{ AnnotationScopeMetadataResolver, ScopedProxyMode }
 import org.springframework.core.`type`.filter.RegexPatternTypeFilter
 import java.util.regex.Pattern
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
@@ -31,7 +31,7 @@ class ComponentScanTests extends FunSuite with Matchers with GivenWhenThen {
 
   // Fixtures
 
-  var context : FunctionalConfigApplicationContext = _
+  var context: FunctionalConfigApplicationContext = _
 
   // Tests
 
@@ -59,7 +59,7 @@ class ComponentScanTests extends FunSuite with Matchers with GivenWhenThen {
 
   test("should validate conflicting scope configuration") {
     When("loaded config")
-	an [IllegalArgumentException] should be thrownBy {
+    an[IllegalArgumentException] should be thrownBy {
       FunctionalConfigApplicationContext[ScopeConflictComponentScanConfig]
     }
   }
@@ -69,7 +69,7 @@ class ComponentScanTests extends FunSuite with Matchers with GivenWhenThen {
     context = FunctionalConfigApplicationContext[ExcludingComponentScanConfig]
 
     When("scanned component is retrieved")
-    an [NoSuchBeanDefinitionException] should be thrownBy {
+    an[NoSuchBeanDefinitionException] should be thrownBy {
       context.getBean(classOf[TestComponent])
     }
   }

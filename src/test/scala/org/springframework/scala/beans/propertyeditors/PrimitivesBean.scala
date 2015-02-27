@@ -23,32 +23,31 @@ import scala.beans.BeanProperty
  */
 class PrimitivesBean {
 
-	@BeanProperty
-	var byte: Byte = 0
+  @BeanProperty
+  var byte: Byte = 0
 
-	@BeanProperty
-	var short: Short = 0
+  @BeanProperty
+  var short: Short = 0
 
-	@BeanProperty
-	var int: Int = 0
+  @BeanProperty
+  var int: Int = 0
 
-	@BeanProperty
-	var long: Long = 0
+  @BeanProperty
+  var long: Long = 0
 
-	@BeanProperty
-	var char: Char = 0
+  @BeanProperty
+  var char: Char = 0
 
-	@BeanProperty
-	var float: Float = 0F
+  @BeanProperty
+  var float: Float = 0F
 
-	@BeanProperty
-	var double: Double = 0D
+  @BeanProperty
+  var double: Double = 0D
 
-	@BeanProperty
-	var bool: Boolean = false
+  @BeanProperty
+  var bool: Boolean = false
 
-	@BeanProperty
-	var string: String = ""
-
+  @BeanProperty
+  var string: String = ""
 
 }

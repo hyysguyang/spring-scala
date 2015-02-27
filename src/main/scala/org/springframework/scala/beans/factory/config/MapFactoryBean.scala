@@ -30,18 +30,18 @@ import scala.collection.{ mutable, Map }
  */
 class MapFactoryBean[T, U](val sourceMap: Map[T, U],
                            val builderFunction: () ⇒ mutable.Builder[(T, U), Map[T, U]])
-        extends AbstractFactoryBean[scala.collection.Map[T, U]] {
+    extends AbstractFactoryBean[scala.collection.Map[T, U]] {
 
-    def this(sourceMap: Map[T, U]) {
-        this(sourceMap, Map.newBuilder[T, U] _)
-    }
+  def this(sourceMap: Map[T, U]) {
+    this(sourceMap, Map.newBuilder[T, U] _)
+  }
 
-    override def getObjectType = classOf[Map[T, U]]
+  override def getObjectType = classOf[Map[T, U]]
 
-    override def createInstance(): Map[T, U] = {
-        val builder = builderFunction()
-        // TODO: determine Seq element type by using GenericCollectionTypeResolver
-        builder ++= sourceMap
-        builder.result()
-    }
+  override def createInstance(): Map[T, U] = {
+    val builder = builderFunction()
+    // TODO: determine Seq element type by using GenericCollectionTypeResolver
+    builder ++= sourceMap
+    builder.result()
+  }
 }
